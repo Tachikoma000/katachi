@@ -10,11 +10,18 @@ import { Header } from "@/components/layout/header"
 import { FileExplorer } from "@/components/file-system/file-explorer"
 import { MarkdownEditor } from "@/components/editor/markdown-editor"
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable"
+import { useAutoSave } from "@/hooks/use-auto-save"
 
 export default function HomePage() {
   const [documents, setDocuments] = useAtom(documentsAtom)
   const [folders, setFolders] = useAtom(foldersAtom)
   const [activeDocument, setActiveDocument] = useState<Document | null>(null)
+  
+  // Auto-save functionality
+  const { isSaving, lastSaved, saveNow } = useAutoSave(activeDocument, {
+    delay: 500,
+    enabled: true
+  })
 
   const handleCreateDocument = () => {
     const name = prompt("Document name:")
@@ -85,7 +92,16 @@ export default function HomePage() {
                       <span>{activeDocument.wordCount} words</span>
                       <span>{activeDocument.characterCount} characters</span>
                       <span>{activeDocument.metadata.readingTime}min read</span>
-                      <span>Last saved: {new Date(activeDocument.updatedAt).toLocaleTimeString()}</span>
+                      <span>
+                        {isSaving ? (
+                          "Saving..."
+                        ) : lastSaved ? (
+                          `Saved at ${lastSaved.toLocaleTimeString()}`
+                        ) : (
+                          `Last saved: ${new Date(activeDocument.updatedAt).toLocaleTimeString()}`
+                        )}
+                      </span>
+                      {isSaving && <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse" />}
                     </div>
                   </div>
 

@@ -10,7 +10,11 @@ import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary"
 import { HeadingNode, QuoteNode } from "@lexical/rich-text"
 import { ListNode, ListItemNode } from "@lexical/list"
 import { CodeNode, CodeHighlightNode } from "@lexical/code"
+import { TableNode, TableCellNode, TableRowNode } from "@lexical/table"
+import { HorizontalRuleNode } from "@lexical/react/LexicalHorizontalRuleNode"
+import { LinkNode } from "@lexical/link"
 import { ParagraphNode, TextNode } from "lexical"
+import { ImageNode } from "@/components/editor/nodes/image-node"
 
 import { ContentEditable } from "@/components/editor/editor-ui/content-editable"
 import { editorTheme } from "@/components/editor/themes/editor-theme"
@@ -33,6 +37,12 @@ const editorConfig: InitialConfigType = {
     ListItemNode,
     CodeNode,
     CodeHighlightNode,
+    TableNode,
+    TableCellNode,
+    TableRowNode,
+    HorizontalRuleNode,
+    LinkNode,
+    ImageNode,
   ],
   onError: (error: Error) => {
     console.error("Lexical Error:", error)
