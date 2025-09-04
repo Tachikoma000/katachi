@@ -20,8 +20,23 @@ import { ContentEditable } from "@/components/editor/editor-ui/content-editable"
 import { editorTheme } from "@/components/editor/themes/editor-theme"
 import { ToolbarPlugin } from "@/components/editor/plugins/toolbar/toolbar-plugin"
 import { BlockFormatDropDown } from "@/components/editor/plugins/toolbar/block-format-toolbar-plugin"
+import { FormatParagraph } from "@/components/editor/plugins/toolbar/block-format/format-paragraph"
+import { FormatHeading } from "@/components/editor/plugins/toolbar/block-format/format-heading"
+import { FormatBulletedList } from "@/components/editor/plugins/toolbar/block-format/format-bulleted-list"
+import { FormatNumberedList } from "@/components/editor/plugins/toolbar/block-format/format-numbered-list"
+import { FormatCheckList } from "@/components/editor/plugins/toolbar/block-format/format-check-list"
+import { FormatQuote } from "@/components/editor/plugins/toolbar/block-format/format-quote"
+import { BlockInsertPlugin } from "@/components/editor/plugins/toolbar/block-insert-plugin"
+import { InsertTable } from "@/components/editor/plugins/toolbar/block-insert/insert-table"
+import { InsertImage } from "@/components/editor/plugins/toolbar/block-insert/insert-image"
+import { InsertHorizontalRule } from "@/components/editor/plugins/toolbar/block-insert/insert-horizontal-rule"
 import { ActionsPlugin } from "@/components/editor/plugins/actions/actions-plugin"
 import { MarkdownTogglePlugin } from "@/components/editor/plugins/actions/markdown-toggle-plugin"
+import { TablePlugin } from "@/components/editor/plugins/table-plugin"
+import { LinkPlugin } from "@/components/editor/plugins/link-plugin"
+import { CodeHighlightPlugin } from "@/components/editor/plugins/code-highlight-plugin"
+import { FloatingTextFormatToolbarPlugin } from "@/components/editor/plugins/floating-text-format-plugin"
+import { TablePlugin as LexicalTablePlugin } from "@lexical/react/LexicalTablePlugin"
 import { TooltipProvider } from "@/components/ui/tooltip"
 
 // Editor configuration
@@ -93,12 +108,27 @@ export function MarkdownEditor({
       >
         <TooltipProvider>
           <div className="relative">
-            {/* Simplified Toolbar for now */}
-            <div className="sticky top-0 z-10 flex gap-2 overflow-auto border-b p-2 bg-background/95 backdrop-blur">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <span>Katachi Editor</span>
-              </div>
-            </div>
+            {/* Enhanced Functional Toolbar */}
+            <ToolbarPlugin>
+              {({ blockType }) => (
+                <div className="sticky top-0 z-10 flex gap-2 overflow-auto border-b p-2 bg-background/95 backdrop-blur">
+                  <BlockFormatDropDown>
+                    <FormatParagraph />
+                    <FormatHeading levels={["h1", "h2", "h3"]} />
+                    <FormatBulletedList />
+                    <FormatNumberedList />
+                    <FormatCheckList />
+                    <FormatQuote />
+                  </BlockFormatDropDown>
+                  
+                  <BlockInsertPlugin>
+                    <InsertTable />
+                    <InsertImage />
+                    <InsertHorizontalRule />
+                  </BlockInsertPlugin>
+                </div>
+              )}
+            </ToolbarPlugin>
 
             {/* Editor Content */}
             <div className="relative">
@@ -115,6 +145,14 @@ export function MarkdownEditor({
                 }
                 ErrorBoundary={LexicalErrorBoundary}
               />
+              
+              {/* Essential Editor Plugins */}
+              <LexicalTablePlugin 
+                hasCellMerge={true}
+                hasCellBackgroundColor={true}
+              />
+              <LinkPlugin />
+              <CodeHighlightPlugin />
               
               {/* Editor Change Handler */}
               <OnChangePlugin 
