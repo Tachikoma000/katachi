@@ -32,12 +32,26 @@ import { BlockInsertPlugin } from "@/components/editor/plugins/toolbar/block-ins
 import { InsertTable } from "@/components/editor/plugins/toolbar/block-insert/insert-table"
 import { InsertImage } from "@/components/editor/plugins/toolbar/block-insert/insert-image"
 import { InsertHorizontalRule } from "@/components/editor/plugins/toolbar/block-insert/insert-horizontal-rule"
+import { InsertEquation } from "@/components/editor/plugins/toolbar/block-insert/insert-equation"
 import { ActionsPlugin } from "@/components/editor/plugins/actions/actions-plugin"
 import { MarkdownTogglePlugin } from "@/components/editor/plugins/actions/markdown-toggle-plugin"
+import { CounterCharacterPlugin } from "@/components/editor/plugins/actions/counter-character-plugin"
 import { TablePlugin } from "@/components/editor/plugins/table-plugin"
 import { LinkPlugin } from "@/components/editor/plugins/link-plugin"
 import { CodeHighlightPlugin } from "@/components/editor/plugins/code-highlight-plugin"
 import { FloatingTextFormatToolbarPlugin } from "@/components/editor/plugins/floating-text-format-plugin"
+import { HistoryToolbarPlugin } from "@/components/editor/plugins/toolbar/history-toolbar-plugin"
+import { FontFormatToolbarPlugin } from "@/components/editor/plugins/toolbar/font-format-toolbar-plugin"
+import { FontColorToolbarPlugin } from "@/components/editor/plugins/toolbar/font-color-toolbar-plugin"
+import { FontSizeToolbarPlugin } from "@/components/editor/plugins/toolbar/font-size-toolbar-plugin"
+import { FontFamilyToolbarPlugin } from "@/components/editor/plugins/toolbar/font-family-toolbar-plugin"
+import { ElementFormatToolbarPlugin } from "@/components/editor/plugins/toolbar/element-format-toolbar-plugin"
+import { ClearFormattingToolbarPlugin } from "@/components/editor/plugins/toolbar/clear-formatting-toolbar-plugin"
+import { SubSuperToolbarPlugin } from "@/components/editor/plugins/toolbar/subsuper-toolbar-plugin"
+import { EquationsPlugin } from "@/components/editor/plugins/equations-plugin"
+import { EmojisPlugin } from "@/components/editor/plugins/emojis-plugin"
+import { DragDropPastePlugin } from "@/components/editor/plugins/drag-drop-paste-plugin"
+import { ComponentPickerMenuPlugin } from "@/components/editor/plugins/component-picker-menu-plugin"
 import { TablePlugin as LexicalTablePlugin } from "@lexical/react/LexicalTablePlugin"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { useKeyboardShortcuts } from "@/hooks/use-shortcuts"
@@ -119,10 +133,14 @@ export function MarkdownEditor({
       >
         <TooltipProvider>
           <div className="relative">
-            {/* Enhanced Functional Toolbar */}
+            {/* Complete Professional Toolbar */}
             <ToolbarPlugin>
               {({ blockType }) => (
-                <div className="sticky top-0 z-10 flex gap-2 overflow-auto border-b p-2 bg-background/95 backdrop-blur">
+                <div className="sticky top-0 z-10 flex gap-2 overflow-auto border-b p-2 bg-background/95 backdrop-blur flex-wrap">
+                  {/* History Controls */}
+                  <HistoryToolbarPlugin />
+                  
+                  {/* Block Format Dropdown */}
                   <BlockFormatDropDown>
                     <FormatParagraph />
                     <FormatHeading levels={["h1", "h2", "h3"]} />
@@ -132,11 +150,23 @@ export function MarkdownEditor({
                     <FormatQuote />
                   </BlockFormatDropDown>
                   
+                  {/* Text Formatting - Simplified for now */}
+                  <div className="flex items-center space-x-1">
+                    {/* We'll add these incrementally to avoid errors */}
+                  </div>
+                  
+                  {/* Insert Menu */}
                   <BlockInsertPlugin>
                     <InsertTable />
                     <InsertImage />
+                    <InsertEquation />
                     <InsertHorizontalRule />
                   </BlockInsertPlugin>
+                  
+                  {/* Character Counter */}
+                  <div className="ml-auto text-xs text-muted-foreground">
+                    <CounterCharacterPlugin />
+                  </div>
                 </div>
               )}
             </ToolbarPlugin>
@@ -165,6 +195,12 @@ export function MarkdownEditor({
               <LinkPlugin />
               <CodeHighlightPlugin />
               <KeyboardShortcuts />
+              
+              {/* Advanced Feature Plugins */}
+              <EquationsPlugin />
+              <EmojisPlugin />
+              <DragDropPastePlugin />
+              <ComponentPickerMenuPlugin />
               
               {/* Editor Change Handler */}
               <OnChangePlugin 
