@@ -142,6 +142,64 @@ export class FileSystemManager {
     return updatedFolders
   }
 
+  static renameDocument(document: Document, newName: string): Document {
+    return this.updateDocument(document, { 
+      name: newName.endsWith('.md') ? newName : `${newName}.md`
+    })
+  }
+
+  static renameFolder(folder: Folder, newName: string): Folder {
+    return this.updateFolder(folder, { name: newName })
+  }
+
+  static duplicateDocument(document: Document): Document {
+    const now = new Date()
+    const baseName = document.name.replace('.md', '')
+    const duplicateName = `${baseName} - Copy.md`
+    
+    return {
+      ...document,
+      id: this.generateId(),
+      name: duplicateName,
+      createdAt: now,
+      updatedAt: now,
+      syncStatus: "local",
+      cloudFileId: undefined,
+      cloudLastModified: undefined,
+    }
+  }
+
+  static starDocument(document: Document): Document {
+    return this.updateDocument(document, {
+      metadata: {
+        ...document.metadata,
+        isStarred: !document.metadata.isStarred
+      }
+    })
+  }
+
+  static archiveDocument(document: Document): Document {
+    return this.updateDocument(document, {
+      metadata: {
+        ...document.metadata,
+        isArchived: !document.metadata.isArchived
+      }
+    })
+  }
+
+  static moveDocumentToFolder(document: Document, targetFolderId?: string): Document {
+    return this.updateDocument(document, { folderId: targetFolderId })
+  }
+
+  static moveFolderToFolder(folder: Folder, targetFolderId?: string): Folder {
+    return this.updateFolder(folder, { parentId: targetFolderId })
+  }
+
+  // Helper function to generate UUIDs (simplified version)
+  private static generateId(): string {
+    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+  }
+
   // Utility functions
   static countWords(text: string): number {
     if (!text.trim()) return 0

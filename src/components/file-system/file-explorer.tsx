@@ -5,6 +5,7 @@ import { useAtom } from "jotai"
 import { documentsAtom, foldersAtom } from "@/lib/storage"
 import { FileSystemManager } from "@/lib/file-system"
 import { Document, Folder } from "@/types/file-system"
+import { FileContextMenu } from "./file-context-menu"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -16,7 +17,8 @@ import {
   Plus,
   Search,
   MoreHorizontal,
-  FileText
+  FileText,
+  Star
 } from "lucide-react"
 
 interface FileExplorerProps {
@@ -24,13 +26,29 @@ interface FileExplorerProps {
   onDocumentSelect: (document: Document) => void
   onCreateDocument: () => void
   onCreateFolder: () => void
+  onRenameDocument?: (document: Document, newName: string) => void
+  onDeleteDocument?: (document: Document) => void
+  onDuplicateDocument?: (document: Document) => void
+  onStarDocument?: (document: Document) => void
+  onArchiveDocument?: (document: Document) => void
+  onRenameFolder?: (folder: Folder, newName: string) => void
+  onDeleteFolder?: (folder: Folder) => void
+  onExportDocument?: (document: Document) => void
 }
 
 export function FileExplorer({ 
   activeDocumentId, 
   onDocumentSelect, 
   onCreateDocument,
-  onCreateFolder 
+  onCreateFolder,
+  onRenameDocument,
+  onDeleteDocument,
+  onDuplicateDocument,
+  onStarDocument,
+  onArchiveDocument,
+  onRenameFolder,
+  onDeleteFolder,
+  onExportDocument
 }: FileExplorerProps) {
   const [documents] = useAtom(documentsAtom)
   const [folders] = useAtom(foldersAtom)
@@ -53,19 +71,36 @@ export function FileExplorer({
   }
 
   const renderDocument = (doc: Document) => (
-    <div
+    <FileContextMenu
       key={doc.id}
-      className={`flex items-center space-x-2 rounded-md px-2 py-1 text-sm cursor-pointer hover:bg-accent ${
-        activeDocumentId === doc.id ? "bg-accent" : ""
-      }`}
-      onClick={() => onDocumentSelect(doc)}
+      item={doc}
+      itemType="document"
+      onRename={(item) => {
+        const newName = prompt("Document name:", item.name.replace('.md', ''))
+        if (newName) onRenameDocument?.(item as Document, newName)
+      }}
+      onDelete={(item) => onDeleteDocument?.(item as Document)}
+      onDuplicate={(item) => onDuplicateDocument?.(item)}
+      onStar={(item) => onStarDocument?.(item)}
+      onArchive={(item) => onArchiveDocument?.(item)}
+      onExport={(item) => onExportDocument?.(item)}
     >
-      <FileText className="h-4 w-4 text-muted-foreground" />
-      <span className="flex-1 truncate">{doc.name}</span>
-      <Button variant="ghost" size="sm" className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100">
-        <MoreHorizontal className="h-3 w-3" />
-      </Button>
-    </div>
+      <div
+        className={`flex items-center space-x-2 rounded-md px-2 py-1 text-sm cursor-pointer hover:bg-accent group ${
+          activeDocumentId === doc.id ? "bg-accent" : ""
+        }`}
+        onClick={() => onDocumentSelect(doc)}
+      >
+        <div className="flex items-center space-x-2">
+          <FileText className="h-4 w-4 text-muted-foreground" />
+          {doc.metadata.isStarred && <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />}
+        </div>
+        <span className="flex-1 truncate">{doc.name}</span>
+        <Button variant="ghost" size="sm" className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100">
+          <MoreHorizontal className="h-3 w-3" />
+        </Button>
+      </div>
+    </FileContextMenu>
   )
 
   const renderFolder = (folder: Folder, level = 0) => {
@@ -75,20 +110,31 @@ export function FileExplorer({
 
     return (
       <div key={folder.id} style={{ marginLeft: `${level * 12}px` }}>
-        <div
-          className="flex items-center space-x-2 rounded-md px-2 py-1 text-sm cursor-pointer hover:bg-accent group"
-          onClick={() => toggleFolder(folder.id)}
+        <FileContextMenu
+          item={folder}
+          itemType="folder"
+          onRename={(item) => {
+            const newName = prompt("Folder name:", item.name)
+            if (newName) onRenameFolder?.(item as Folder, newName)
+          }}
+          onDelete={(item) => onDeleteFolder?.(item as Folder)}
+          onCreateFolder={(parentId) => onCreateFolder()}
         >
-          {isExpanded ? (
-            <FolderOpen className="h-4 w-4 text-muted-foreground" />
-          ) : (
-            <FolderIcon className="h-4 w-4 text-muted-foreground" />
-          )}
-          <span className="flex-1 truncate">{folder.name}</span>
-          <Button variant="ghost" size="sm" className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100">
-            <MoreHorizontal className="h-3 w-3" />
-          </Button>
-        </div>
+          <div
+            className="flex items-center space-x-2 rounded-md px-2 py-1 text-sm cursor-pointer hover:bg-accent group"
+            onClick={() => toggleFolder(folder.id)}
+          >
+            {isExpanded ? (
+              <FolderOpen className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <FolderIcon className="h-4 w-4 text-muted-foreground" />
+            )}
+            <span className="flex-1 truncate">{folder.name}</span>
+            <Button variant="ghost" size="sm" className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100">
+              <MoreHorizontal className="h-3 w-3" />
+            </Button>
+          </div>
+        </FileContextMenu>
         
         {isExpanded && (
           <div className="ml-4">

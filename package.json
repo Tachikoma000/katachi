@@ -18,6 +18,7 @@
     "@lexical/selection": "^0.34.0",
     "@lexical/table": "^0.34.0",
     "@lexical/utils": "^0.34.0",
+    "@radix-ui/react-context-menu": "^2.2.16",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-menubar": "^1.1.16",

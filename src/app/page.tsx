@@ -5,7 +5,7 @@ import { useState } from "react"
 import { useAtom } from "jotai"
 import { documentsAtom, foldersAtom } from "@/lib/storage"
 import { FileSystemManager } from "@/lib/file-system"
-import { Document } from "@/types/file-system"
+import { Document, Folder } from "@/types/file-system"
 import { Header } from "@/components/layout/header"
 import { FileExplorer } from "@/components/file-system/file-explorer"
 import { MarkdownEditor } from "@/components/editor/markdown-editor"
@@ -73,6 +73,57 @@ export default function HomePage() {
     }
   }
 
+  // File management operations
+  const handleRenameDocument = (document: Document, newName: string) => {
+    const renamed = FileSystemManager.renameDocument(document, newName)
+    setDocuments(prev => ({ ...prev, [renamed.id]: renamed }))
+    if (activeDocument?.id === document.id) {
+      setActiveDocument(renamed)
+    }
+  }
+
+  const handleDeleteDocument = (document: Document) => {
+    const { documents: updatedDocuments, folders: updatedFolders } = 
+      FileSystemManager.deleteDocument(document.id, documents, folders)
+    setDocuments(updatedDocuments)
+    setFolders(updatedFolders)
+    if (activeDocument?.id === document.id) {
+      setActiveDocument(null)
+    }
+  }
+
+  const handleDuplicateDocument = (document: Document) => {
+    const duplicate = FileSystemManager.duplicateDocument(document)
+    setDocuments(prev => ({ ...prev, [duplicate.id]: duplicate }))
+    setActiveDocument(duplicate)
+  }
+
+  const handleStarDocument = (document: Document) => {
+    const starred = FileSystemManager.starDocument(document)
+    setDocuments(prev => ({ ...prev, [starred.id]: starred }))
+    if (activeDocument?.id === document.id) {
+      setActiveDocument(starred)
+    }
+  }
+
+  const handleArchiveDocument = (document: Document) => {
+    const archived = FileSystemManager.archiveDocument(document)
+    setDocuments(prev => ({ ...prev, [archived.id]: archived }))
+    if (activeDocument?.id === document.id) {
+      setActiveDocument(archived)
+    }
+  }
+
+  const handleRenameFolder = (folder: Folder, newName: string) => {
+    const renamed = FileSystemManager.renameFolder(folder, newName)
+    setFolders(prev => ({ ...prev, [renamed.id]: renamed }))
+  }
+
+  const handleDeleteFolder = (folder: Folder) => {
+    const updatedFolders = FileSystemManager.deleteFolder(folder.id, folders)
+    setFolders(updatedFolders)
+  }
+
   return (
     <div className="h-screen flex flex-col">
       <Header 
@@ -93,6 +144,14 @@ export default function HomePage() {
               onDocumentSelect={handleDocumentSelect}
               onCreateDocument={handleCreateDocument}
               onCreateFolder={handleCreateFolder}
+              onRenameDocument={handleRenameDocument}
+              onDeleteDocument={handleDeleteDocument}
+              onDuplicateDocument={handleDuplicateDocument}
+              onStarDocument={handleStarDocument}
+              onArchiveDocument={handleArchiveDocument}
+              onRenameFolder={handleRenameFolder}
+              onDeleteFolder={handleDeleteFolder}
+              onExportDocument={(doc) => console.log("Export from context menu:", doc.name)}
             />
           </ResizablePanel>
 
