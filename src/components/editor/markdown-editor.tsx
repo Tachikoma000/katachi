@@ -136,36 +136,52 @@ export function MarkdownEditor({
             {/* Complete Professional Toolbar */}
             <ToolbarPlugin>
               {({ blockType }) => (
-                <div className="sticky top-0 z-10 flex gap-2 overflow-auto border-b p-2 bg-background/95 backdrop-blur flex-wrap">
-                  {/* History Controls */}
-                  <HistoryToolbarPlugin />
-                  
-                  {/* Block Format Dropdown */}
-                  <BlockFormatDropDown>
-                    <FormatParagraph />
-                    <FormatHeading levels={["h1", "h2", "h3"]} />
-                    <FormatBulletedList />
-                    <FormatNumberedList />
-                    <FormatCheckList />
-                    <FormatQuote />
-                  </BlockFormatDropDown>
-                  
-                  {/* Text Formatting - Simplified for now */}
-                  <div className="flex items-center space-x-1">
-                    {/* We'll add these incrementally to avoid errors */}
-                  </div>
-                  
-                  {/* Insert Menu */}
-                  <BlockInsertPlugin>
-                    <InsertTable />
-                    <InsertImage />
-                    <InsertEquation />
-                    <InsertHorizontalRule />
-                  </BlockInsertPlugin>
-                  
-                  {/* Character Counter */}
-                  <div className="ml-auto text-xs text-muted-foreground">
-                    <CounterCharacterPlugin />
+                <div className="sticky top-0 z-10 border-b p-2 bg-background/95 backdrop-blur">
+                  <div className="flex gap-2 overflow-auto flex-wrap items-center">
+                    {/* History Controls */}
+                    <HistoryToolbarPlugin />
+                    
+                    <div className="h-6 w-px bg-border" />
+                    
+                    {/* Block Format Dropdown */}
+                    <BlockFormatDropDown>
+                      <FormatParagraph />
+                      <FormatHeading levels={["h1", "h2", "h3"]} />
+                      <FormatBulletedList />
+                      <FormatNumberedList />
+                      <FormatCheckList />
+                      <FormatQuote />
+                    </BlockFormatDropDown>
+                    
+                    <div className="h-6 w-px bg-border" />
+                    
+                    {/* Text Formatting Controls */}
+                    <FontFormatToolbarPlugin />
+                    <FontSizeToolbarPlugin />
+                    <FontFamilyToolbarPlugin />
+                    <FontColorToolbarPlugin />
+                    
+                    <div className="h-6 w-px bg-border" />
+                    
+                    {/* Element Format */}
+                    <ElementFormatToolbarPlugin />
+                    <SubSuperToolbarPlugin />
+                    <ClearFormattingToolbarPlugin />
+                    
+                    <div className="h-6 w-px bg-border" />
+                    
+                    {/* Insert Menu */}
+                    <BlockInsertPlugin>
+                      <InsertTable />
+                      <InsertImage />
+                      <InsertEquation />
+                      <InsertHorizontalRule />
+                    </BlockInsertPlugin>
+                    
+                    {/* Character Counter */}
+                    <div className="ml-auto text-xs text-muted-foreground">
+                      <CounterCharacterPlugin />
+                    </div>
                   </div>
                 </div>
               )}
