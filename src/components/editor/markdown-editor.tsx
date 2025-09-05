@@ -155,18 +155,10 @@ export function MarkdownEditor({
                     
                     <div className="h-6 w-px bg-border" />
                     
-                    {/* Text Formatting Controls */}
-                    <FontFormatToolbarPlugin />
-                    <FontSizeToolbarPlugin />
-                    <FontFamilyToolbarPlugin />
-                    <FontColorToolbarPlugin />
-                    
-                    <div className="h-6 w-px bg-border" />
-                    
-                    {/* Element Format */}
-                    <ElementFormatToolbarPlugin />
-                    <SubSuperToolbarPlugin />
-                    <ClearFormattingToolbarPlugin />
+                    {/* Text Formatting - Working plugins only for now */}
+                    <div className="flex items-center space-x-1 text-sm text-muted-foreground">
+                      <span>Format controls</span>
+                    </div>
                     
                     <div className="h-6 w-px bg-border" />
                     
