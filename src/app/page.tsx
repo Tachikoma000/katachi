@@ -11,6 +11,8 @@ import { FileExplorer } from "@/components/file-system/file-explorer"
 import { MarkdownEditor } from "@/components/editor/markdown-editor"
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable"
 import { useAutoSave } from "@/hooks/use-auto-save"
+import { ExportDialog } from "@/components/export/export-dialog"
+import { ImportDialog } from "@/components/export/import-dialog"
 
 export default function HomePage() {
   const [documents, setDocuments] = useAtom(documentsAtom)
@@ -56,15 +58,31 @@ export default function HomePage() {
     setActiveDocument(updatedDocument)
   }
 
+  const handleImport = (importedDocuments: Document[]) => {
+    // Add imported documents to state
+    const newDocuments: Record<string, Document> = {}
+    importedDocuments.forEach(doc => {
+      newDocuments[doc.id] = doc
+    })
+    
+    setDocuments(prev => ({ ...prev, ...newDocuments }))
+    
+    // Select the first imported document
+    if (importedDocuments.length > 0) {
+      setActiveDocument(importedDocuments[0])
+    }
+  }
+
   return (
     <div className="h-screen flex flex-col">
       <Header 
         onNewDocument={handleCreateDocument}
         onOpenSettings={() => console.log("Settings")}
-        onExport={() => console.log("Export")}
-        onImport={() => console.log("Import")}
+        onExport={() => {}}  // We'll use separate dialogs
+        onImport={() => {}}  // We'll use separate dialogs
         syncStatus="offline"
       />
+
 
       <div className="flex-1 overflow-hidden">
         <ResizablePanelGroup direction="horizontal" className="h-full">
@@ -87,7 +105,13 @@ export default function HomePage() {
                 <>
                   {/* Document Header */}
                   <div className="border-b p-4 bg-background">
-                    <h1 className="text-xl font-semibold">{activeDocument.name}</h1>
+                    <div className="flex items-center justify-between">
+                      <h1 className="text-xl font-semibold">{activeDocument.name}</h1>
+                      <div className="flex items-center space-x-2">
+                        <ImportDialog onImport={handleImport} />
+                        <ExportDialog document={activeDocument} />
+                      </div>
+                    </div>
                     <div className="flex items-center space-x-4 text-sm text-muted-foreground mt-1">
                       <span>{activeDocument.wordCount} words</span>
                       <span>{activeDocument.characterCount} characters</span>

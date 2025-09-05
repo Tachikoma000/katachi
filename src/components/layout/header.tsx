@@ -22,6 +22,7 @@ interface HeaderProps {
   onExport?: () => void
   onImport?: () => void
   syncStatus?: "synced" | "syncing" | "offline" | "error"
+  customActions?: React.ReactNode
 }
 
 export function Header({ 
@@ -29,7 +30,8 @@ export function Header({
   onOpenSettings, 
   onExport, 
   onImport,
-  syncStatus = "offline"
+  syncStatus = "offline",
+  customActions
 }: HeaderProps) {
   const { theme, setTheme } = useTheme()
 
