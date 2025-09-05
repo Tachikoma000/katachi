@@ -53,6 +53,7 @@ import { EmojisPlugin } from "@/components/editor/plugins/emojis-plugin"
 import { DragDropPastePlugin } from "@/components/editor/plugins/drag-drop-paste-plugin"
 import { ComponentPickerMenuPlugin } from "@/components/editor/plugins/component-picker-menu-plugin"
 import { TablePlugin as LexicalTablePlugin } from "@lexical/react/LexicalTablePlugin"
+import { Button } from "@/components/ui/button"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { useKeyboardShortcuts } from "@/hooks/use-shortcuts"
 
@@ -155,10 +156,25 @@ export function MarkdownEditor({
                     
                     <div className="h-6 w-px bg-border" />
                     
-                    {/* Text Formatting - Working plugins only for now */}
-                    <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-                      <span>Format controls</span>
-                    </div>
+                    {/* Text Formatting - Using shadcn-editor plugins correctly */}
+                    <FontFormatToolbarPlugin format="bold" />
+                    <FontFormatToolbarPlugin format="italic" />
+                    <FontFormatToolbarPlugin format="underline" />
+                    <FontFormatToolbarPlugin format="strikethrough" />
+                    
+                    <div className="h-6 w-px bg-border" />
+                    
+                    {/* Font Controls */}
+                    <FontSizeToolbarPlugin />
+                    <FontFamilyToolbarPlugin />
+                    <FontColorToolbarPlugin />
+                    
+                    <div className="h-6 w-px bg-border" />
+                    
+                    {/* Element Format & Clear */}
+                    <ElementFormatToolbarPlugin />
+                    <SubSuperToolbarPlugin />
+                    <ClearFormattingToolbarPlugin />
                     
                     <div className="h-6 w-px bg-border" />
                     
