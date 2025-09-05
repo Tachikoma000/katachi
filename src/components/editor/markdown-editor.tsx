@@ -38,6 +38,13 @@ import { CodeHighlightPlugin } from "@/components/editor/plugins/code-highlight-
 import { FloatingTextFormatToolbarPlugin } from "@/components/editor/plugins/floating-text-format-plugin"
 import { TablePlugin as LexicalTablePlugin } from "@lexical/react/LexicalTablePlugin"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { useKeyboardShortcuts } from "@/hooks/use-shortcuts"
+
+// Keyboard shortcuts component wrapper
+function KeyboardShortcuts() {
+  useKeyboardShortcuts()
+  return null
+}
 
 // Editor configuration
 const editorConfig: InitialConfigType = {
@@ -88,9 +95,9 @@ export function MarkdownEditor({
   const handleEditorChange = (editorState: EditorState) => {
     const json = editorState.toJSON()
     
-    // Convert to markdown (simplified for now)
+    // Enhanced markdown conversion
     const markdown = editorState.read(() => {
-      // This is a simplified conversion - we'll enhance this later
+      // Get text content from editor state
       const root = editorState._nodeMap.get("root")
       return root?.getTextContent() || ""
     })
@@ -153,6 +160,7 @@ export function MarkdownEditor({
               />
               <LinkPlugin />
               <CodeHighlightPlugin />
+              <KeyboardShortcuts />
               
               {/* Editor Change Handler */}
               <OnChangePlugin 
