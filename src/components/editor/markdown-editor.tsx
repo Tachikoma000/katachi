@@ -15,6 +15,8 @@ import { HorizontalRuleNode } from "@lexical/react/LexicalHorizontalRuleNode"
 import { LinkNode } from "@lexical/link"
 import { ParagraphNode, TextNode } from "lexical"
 import { ImageNode } from "@/components/editor/nodes/image-node"
+import { EquationNode } from "@/components/editor/nodes/equation-node"
+import { EmojiNode } from "@/components/editor/nodes/emoji-node"
 
 import { ContentEditable } from "@/components/editor/editor-ui/content-editable"
 import { editorTheme } from "@/components/editor/themes/editor-theme"
@@ -65,6 +67,8 @@ const editorConfig: InitialConfigType = {
     HorizontalRuleNode,
     LinkNode,
     ImageNode,
+    EquationNode,
+    EmojiNode,
   ],
   onError: (error: Error) => {
     console.error("Lexical Error:", error)
